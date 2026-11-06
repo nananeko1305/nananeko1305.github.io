@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moje aplikacije</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root {
     --bg: #f4f5f7;
@@ -49,9 +52,42 @@
 
   header {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 12px;
+  }
+  .side {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1.6vmin, 16px);
+  }
+
+  /* SR | EN switch. */
+  .lang {
+    display: flex;
+    padding: 2px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+  }
+  .lang button {
+    padding: 3px 10px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: clamp(11px, 1.5vmin, 13px);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] {
+    background: var(--text);
+    color: var(--bg);
+  }
+  .lang button:focus-visible {
+    outline: 2px solid var(--muted);
+    outline-offset: 1px;
   }
   h1 {
     margin: 0;
@@ -158,55 +194,118 @@
 </head>
 <body>
   <header>
-    <h1>Moje aplikacije</h1>
-    <p>6 aplikacija · Flutter</p>
+    <h1 data-i18n="title">Moje aplikacije</h1>
+    <div class="side">
+      <p data-i18n="count">6 aplikacija · Flutter</p>
+      <div class="lang" role="group" aria-label="Jezik / Language">
+        <button type="button" data-lang="sr" aria-pressed="true">SR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
   </header>
 
   <main class="grid">
     <a class="card" style="--accent:#ec8a5d" href="https://nananeko1305.github.io/Account-Manager/">
       <img src="icons/account-manager.png" alt="">
       <h2>Account Manager</h2>
-      <p>Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
+      <p data-i18n="am">Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
       <div class="tags"><span class="ver">v0.1.0</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#4f7be0" href="https://nananeko1305.github.io/car-expenses/">
       <img src="icons/car-expenses.png" alt="">
       <h2>Car Expenses</h2>
-      <p>Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.</p>
+      <p data-i18n="ce">Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.</p>
       <div class="tags"><span class="ver">v1.11.2</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#3bbfb5" href="https://nananeko1305.github.io/money-tracking/">
       <img src="icons/money-tracking.png" alt="">
       <h2>Money Tracking</h2>
-      <p>Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.</p>
+      <p data-i18n="mt">Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.</p>
       <div class="tags"><span class="ver">v1.4.0</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#5c64c8" href="https://nananeko1305.github.io/reminders/">
       <img src="icons/reminders.png" alt="">
       <h2>Reminders</h2>
-      <p>Događaji koji zvone kao alarm, uz podsetnike pre vremena.</p>
-      <div class="tags"><span class="ver">v2.1.0</span><span>Na telefonu</span></div>
+      <p data-i18n="rem">Događaji koji zvone kao alarm, uz podsetnike pre vremena.</p>
+      <div class="tags"><span class="ver">v2.1.0</span><span data-i18n="device">Na telefonu</span></div>
     </a>
 
     <a class="card" style="--accent:#2e8b60" href="https://nananeko1305.github.io/shopping-list/">
       <img src="icons/shopping-list.png" alt="">
       <h2>Shopping List</h2>
-      <p>Liste za kupovinu i pakovanje, sa štikliranjem stavki.</p>
-      <div class="tags"><span class="ver">v1.2.0</span><span>Na telefonu</span></div>
+      <p data-i18n="sl">Liste za kupovinu i pakovanje, sa štikliranjem stavki.</p>
+      <div class="tags"><span class="ver">v1.2.0</span><span data-i18n="device">Na telefonu</span></div>
     </a>
 
     <a class="card" style="--accent:#116b5f" href="https://nananeko1305.github.io/warranty-manager/">
       <img src="icons/warranty-manager.png" alt="">
       <h2>Warranty Manager</h2>
-      <p>Garancije sa slikom računa i podsetnik pre nego što isteknu.</p>
+      <p data-i18n="wm">Garancije sa slikom računa i podsetnik pre nego što isteknu.</p>
       <div class="tags"><span class="ver">v1.0.1</span><span>Firebase</span></div>
     </a>
   </main>
 
   <script>
+    // Serbian and English. The HTML holds the Serbian text, so the page reads
+    // fine without JavaScript. The language is ?lang=sr|en if given, then the
+    // visitor's last choice, then the browser's language.
+    const TEXT = {
+      sr: {
+        title: 'Moje aplikacije',
+        count: '6 aplikacija · Flutter',
+        am: 'Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.',
+        ce: 'Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.',
+        mt: 'Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.',
+        rem: 'Događaji koji zvone kao alarm, uz podsetnike pre vremena.',
+        sl: 'Liste za kupovinu i pakovanje, sa štikliranjem stavki.',
+        wm: 'Garancije sa slikom računa i podsetnik pre nego što isteknu.',
+        device: 'Na telefonu',
+      },
+      en: {
+        title: 'My apps',
+        count: '6 apps · Flutter',
+        am: 'Accounts and passwords, encrypted on the phone with a master password.',
+        ce: 'Service and repair costs for every car: date, amount and mileage.',
+        mt: 'Monthly budget: categories, salary, fixed costs and savings.',
+        rem: 'Events that ring like an alarm, with reminders ahead of time.',
+        sl: 'Shopping and packing lists with items to tick off.',
+        wm: 'Warranties with a photo of the receipt, and a reminder before they end.',
+        device: 'On device',
+      },
+    };
+
+    function pickLang() {
+      const asked = new URLSearchParams(location.search).get('lang');
+      if (Object.hasOwn(TEXT, asked)) return asked;
+      try {
+        const saved = localStorage.getItem('lang');
+        if (Object.hasOwn(TEXT, saved)) return saved;
+      } catch (_) {}
+      const browser = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+      return /^(sr|hr|bs|sh|cnr)\b/i.test(browser) ? 'sr' : 'en';
+    }
+
+    function setLang(lang) {
+      const t = TEXT[lang];
+      document.documentElement.lang = lang === 'sr' ? 'sr-Latn' : 'en';
+      document.title = t.title;
+      for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t[el.dataset.i18n];
+      for (const b of document.querySelectorAll('[data-lang]')) {
+        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+      }
+    }
+
+    for (const b of document.querySelectorAll('[data-lang]')) {
+      b.addEventListener('click', () => {
+        setLang(b.dataset.lang);
+        try { localStorage.setItem('lang', b.dataset.lang); } catch (_) {}
+      });
+    }
+    setLang(pickLang());
+
     // Each app's download page shows its newest version, so read it from
     // there and the cards never go stale. The numbers above are the fallback
     // (opened from disk, or a page that does not answer).
