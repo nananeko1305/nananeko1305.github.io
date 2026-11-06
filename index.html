@@ -167,43 +167,58 @@
       <img src="icons/account-manager.png" alt="">
       <h2>Account Manager</h2>
       <p>Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
-      <div class="tags"><span>v0.1.0</span><span>Firebase</span></div>
+      <div class="tags"><span class="ver">v0.1.0</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#4f7be0" href="https://github.com/nananeko1305/car-expenses">
       <img src="icons/car-expenses.png" alt="">
       <h2>Car Expenses</h2>
       <p>Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.</p>
-      <div class="tags"><span>v1.11.1</span><span>Firebase</span></div>
+      <div class="tags"><span class="ver">v1.11.1</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#3bbfb5" href="https://nananeko1305.github.io/money-tracking/">
       <img src="icons/money-tracking.png" alt="">
       <h2>Money Tracking</h2>
       <p>Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.</p>
-      <div class="tags"><span>v1.3.0</span><span>Firebase</span></div>
+      <div class="tags"><span class="ver">v1.3.0</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#5c64c8" href="https://nananeko1305.github.io/reminders/">
       <img src="icons/reminders.png" alt="">
       <h2>Reminders</h2>
       <p>Događaji koji zvone kao alarm, uz podsetnike pre vremena.</p>
-      <div class="tags"><span>v2.0.0</span><span>Na telefonu</span></div>
+      <div class="tags"><span class="ver">v2.1.0</span><span>Na telefonu</span></div>
     </a>
 
     <a class="card" style="--accent:#2e8b60" href="https://nananeko1305.github.io/shopping-list/">
       <img src="icons/shopping-list.png" alt="">
       <h2>Shopping List</h2>
       <p>Liste za kupovinu i pakovanje, sa štikliranjem stavki.</p>
-      <div class="tags"><span>v1.1.0</span><span>Na telefonu</span></div>
+      <div class="tags"><span class="ver">v1.2.0</span><span>Na telefonu</span></div>
     </a>
 
     <a class="card" style="--accent:#116b5f" href="https://github.com/nananeko1305/warranty-manager">
       <img src="icons/warranty-manager.png" alt="">
       <h2>Warranty Manager</h2>
       <p>Garancije sa slikom računa i podsetnik pre nego što isteknu.</p>
-      <div class="tags"><span>v1.0.0</span><span>Firebase</span></div>
+      <div class="tags"><span class="ver">v1.0.0</span><span>Firebase</span></div>
     </a>
   </main>
+
+  <script>
+    // Each app's download page shows its newest version, so read it from
+    // there and the cards never go stale. The numbers above are the fallback
+    // (opened from disk, or a page that does not answer).
+    for (const card of document.querySelectorAll('.card[href^="https://nananeko1305.github.io/"]')) {
+      fetch(card.href, { cache: 'no-cache' })
+        .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
+        .then((html) => {
+          const m = html.match(/class="chip">v([0-9.]+)</);
+          if (m) card.querySelector('.ver').textContent = 'v' + m[1];
+        })
+        .catch(() => {});
+    }
+  </script>
 </body>
 </html>
