@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moje aplikacije</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --card: #ffffff;
+    --text: #16181d;
+    --muted: #5d6470;
+    --line: #e3e6eb;
+    --tag: #eef0f3;
+    --shadow: 0 1px 2px rgb(0 0 0 / .05), 0 8px 24px rgb(0 0 0 / .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --card: #181b21;
+      --text: #eef0f4;
+      --muted: #9aa1ad;
+      --line: #262a32;
+      --tag: #22262e;
+      --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .3);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  /* The whole page is exactly one screen: nothing scrolls. */
+  html, body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(10px, 2.5vmin, 28px);
+    padding: clamp(12px, 3vmin, 40px);
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(20px, 4vmin, 40px);
+    letter-spacing: -0.02em;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(12px, 1.8vmin, 16px);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: clamp(8px, 2vmin, 24px);
+    min-height: 0;
+  }
+
+  .card {
+    --accent: #888;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(4px, 1.2vmin, 14px);
+    min-height: 0;
+    padding: clamp(10px, 2.5vmin, 32px);
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: clamp(12px, 2vmin, 22px);
+    box-shadow: var(--shadow);
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--accent);
+  }
+  .card:hover, .card:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    outline: none;
+  }
+
+  .card img {
+    width: clamp(36px, 11vmin, 120px);
+    height: auto;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+  }
+  .card h2 {
+    margin: 0;
+    font-size: clamp(14px, 2.6vmin, 26px);
+    letter-spacing: -0.01em;
+  }
+  .card p {
+    margin: 0;
+    max-width: 34ch;
+    color: var(--muted);
+    font-size: clamp(11px, 1.7vmin, 16px);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  .tags span {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--tag);
+    color: var(--muted);
+    font-size: clamp(10px, 1.4vmin, 13px);
+    white-space: nowrap;
+  }
+
+  /* Tall or narrow screens (phones): 2 columns, 3 rows. */
+  @media (max-aspect-ratio: 1/1), (max-width: 700px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+    }
+  }
+  /* Very low screens (phone on its side): drop the description and tags. */
+  @media (max-height: 480px) {
+    .card p, .tags { display: none; }
+    header p { display: none; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Moje aplikacije</h1>
+    <p>6 aplikacija · Flutter</p>
+  </header>
+
+  <main class="grid">
+    <a class="card" style="--accent:#ec8a5d" href="https://github.com/nananeko1305/Account-Manager">
+      <img src="icons/account-manager.png" alt="">
+      <h2>Account Manager</h2>
+      <p>Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
+      <div class="tags"><span>v0.1.0</span><span>Firebase</span></div>
+    </a>
+
+    <a class="card" style="--accent:#4f7be0" href="https://github.com/nananeko1305/car-expenses">
+      <img src="icons/car-expenses.png" alt="">
+      <h2>Car Expenses</h2>
+      <p>Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.</p>
+      <div class="tags"><span>v1.1.0</span><span>Firebase</span></div>
+    </a>
+
+    <a class="card" style="--accent:#3bbfb5" href="https://github.com/nananeko1305/money-tracking">
+      <img src="icons/money-tracking.png" alt="">
+      <h2>Money Tracking</h2>
+      <p>Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.</p>
+      <div class="tags"><span>v1.0.0</span><span>Firebase</span></div>
+    </a>
+
+    <a class="card" style="--accent:#5c64c8" href="https://github.com/nananeko1305/reminders">
+      <img src="icons/reminders.png" alt="">
+      <h2>Reminders</h2>
+      <p>Događaji koji zvone kao alarm, uz podsetnike pre vremena.</p>
+      <div class="tags"><span>v1.0.0</span><span>Na telefonu</span></div>
+    </a>
+
+    <a class="card" style="--accent:#2e8b60" href="https://github.com/nananeko1305/shopping-list">
+      <img src="icons/shopping-list.png" alt="">
+      <h2>Shopping List</h2>
+      <p>Liste za kupovinu i pakovanje, sa štikliranjem stavki.</p>
+      <div class="tags"><span>v1.0.0</span><span>Na telefonu</span></div>
+    </a>
+
+    <a class="card" style="--accent:#116b5f" href="https://github.com/nananeko1305/warranty-manager">
+      <img src="icons/warranty-manager.png" alt="">
+      <h2>Warranty Manager</h2>
+      <p>Garancije sa slikom računa i podsetnik pre nego što isteknu.</p>
+      <div class="tags"><span>v1.0.0</span><span>Firebase</span></div>
+    </a>
+  </main>
+</body>
+</html>
