@@ -100,13 +100,19 @@
     font-size: clamp(12px, 1.8vmin, 16px);
   }
 
+  /* Wide screens: 4 cards a row on 24 columns (6 each), so a shorter last
+     row can be centered by moving its first card in by half a card. */
   .grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(24, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
     gap: clamp(8px, 2vmin, 24px);
     min-height: 0;
   }
+  .grid > .card { grid-column: span 6; }
+  .grid > .card:nth-child(4n+1):nth-last-child(3) { grid-column: 4 / span 6; }
+  .grid > .card:nth-child(4n+1):nth-last-child(2) { grid-column: 7 / span 6; }
+  .grid > .card:nth-child(4n+1):nth-last-child(1) { grid-column: 10 / span 6; }
 
   .card {
     --accent: #888;
@@ -178,12 +184,16 @@
     white-space: nowrap;
   }
 
-  /* Tall or narrow screens (phones): 2 columns, 3 rows. */
+  /* Tall or narrow screens (phones): 2 columns, 4 rows; an odd last card
+     takes the whole row. */
   @media (max-aspect-ratio: 1/1), (max-width: 700px) {
     .grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-rows: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(4, minmax(0, 1fr));
     }
+    .grid > .card,
+    .grid > .card:nth-child(4n+1):nth-last-child(n) { grid-column: auto; }
+    .grid > .card:nth-child(odd):last-child { grid-column: 1 / -1; }
   }
   /* Very low screens (phone on its side): drop the description and tags. */
   @media (max-height: 480px) {
@@ -196,7 +206,7 @@
   <header>
     <h1 data-i18n="title">Moje aplikacije</h1>
     <div class="side">
-      <p data-i18n="count">6 aplikacija · Flutter</p>
+      <p data-i18n="count">7 aplikacija · Flutter</p>
       <div class="lang" role="group" aria-label="Jezik / Language">
         <button type="button" data-lang="sr" aria-pressed="true">SR</button>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -210,6 +220,13 @@
       <h2>Account Manager</h2>
       <p data-i18n="am">Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
       <div class="tags"><span class="ver">v0.1.0</span><span>Firebase</span></div>
+    </a>
+
+    <a class="card" style="--accent:#ff2e97" href="https://nananeko1305.github.io/bend-planer/">
+      <img src="icons/bend-planer.png" alt="">
+      <h2>Bend Planer</h2>
+      <p data-i18n="bp">Tezge benda: dogovorena cena, bakšiš i mesečni izveštaj.</p>
+      <div class="tags"><span class="ver">v1.0.0</span><span>Firebase</span></div>
     </a>
 
     <a class="card" style="--accent:#4f7be0" href="https://nananeko1305.github.io/car-expenses/">
@@ -255,8 +272,9 @@
     const TEXT = {
       sr: {
         title: 'Moje aplikacije',
-        count: '6 aplikacija · Flutter',
+        count: '7 aplikacija · Flutter',
         am: 'Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.',
+        bp: 'Tezge benda: dogovorena cena, bakšiš i mesečni izveštaj.',
         ce: 'Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.',
         mt: 'Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.',
         rem: 'Događaji koji zvone kao alarm, uz podsetnike pre vremena.',
@@ -266,8 +284,9 @@
       },
       en: {
         title: 'My apps',
-        count: '6 apps · Flutter',
+        count: '7 apps · Flutter',
         am: 'Accounts and passwords, encrypted on the phone with a master password.',
+        bp: "The band's gigs: agreed price, tips and a monthly report.",
         ce: 'Service and repair costs for every car: date, amount and mileage.',
         mt: 'Monthly budget: categories, salary, fixed costs and savings.',
         rem: 'Events that ring like an alarm, with reminders ahead of time.',
