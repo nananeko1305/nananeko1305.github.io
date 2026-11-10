@@ -1,342 +1,512 @@
 <!doctype html>
-<html lang="sr-Latn">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Moje aplikacije</title>
+<title>Petar Ćoćić — React &amp; React Native Developer</title>
+<meta name="description" content="React &amp; React Native developer focused on performance, real-time systems and AI integration. 3+ years in fintech, e-commerce and OSINT, plus 7 Flutter apps of my own.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nananeko1305.github.io/">
+<meta property="og:title" content="Petar Ćoćić — React &amp; React Native Developer">
+<meta property="og:description" content="Performance, real-time systems and AI integration. 3+ years in fintech, e-commerce and OSINT.">
+<meta name="theme-color" content="#0b0e14">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<style>
-  :root {
-    --bg: #f4f5f7;
-    --card: #ffffff;
-    --text: #16181d;
-    --muted: #5d6470;
-    --line: #e3e6eb;
-    --tag: #eef0f3;
-    --shadow: 0 1px 2px rgb(0 0 0 / .05), 0 8px 24px rgb(0 0 0 / .06);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f1115;
-      --card: #181b21;
-      --text: #eef0f4;
-      --muted: #9aa1ad;
-      --line: #262a32;
-      --tag: #22262e;
-      --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .3);
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>
+  // Pick the language before the first paint, so the page never flashes the
+  // other one: ?lang=sr|en, then the visitor's last choice, then the browser.
+  (function () {
+    var l = null;
+    try {
+      l = new URLSearchParams(location.search).get('lang');
+      if (l !== 'sr' && l !== 'en') l = localStorage.getItem('lang');
+    } catch (e) {}
+    if (l !== 'sr' && l !== 'en') {
+      var b = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+      l = /^(sr|hr|bs|sh|cnr)\b/i.test(b) ? 'sr' : 'en';
     }
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-
-  /* The whole page is exactly one screen: nothing scrolls. */
-  html, body {
-    margin: 0;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-
-  body {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: clamp(10px, 2.5vmin, 28px);
-    padding: clamp(12px, 3vmin, 40px);
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  }
-
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .side {
-    display: flex;
-    align-items: center;
-    gap: clamp(8px, 1.6vmin, 16px);
-  }
-
-  /* SR | EN switch. */
-  .lang {
-    display: flex;
-    padding: 2px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--card);
-  }
-  .lang button {
-    padding: 3px 10px;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--muted);
-    font: inherit;
-    font-size: clamp(11px, 1.5vmin, 13px);
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .lang button[aria-pressed="true"] {
-    background: var(--text);
-    color: var(--bg);
-  }
-  .lang button:focus-visible {
-    outline: 2px solid var(--muted);
-    outline-offset: 1px;
-  }
-  h1 {
-    margin: 0;
-    font-size: clamp(20px, 4vmin, 40px);
-    letter-spacing: -0.02em;
-  }
-  header p {
-    margin: 0;
-    color: var(--muted);
-    font-size: clamp(12px, 1.8vmin, 16px);
-  }
-
-  /* Wide screens: 4 cards a row on 24 columns (6 each), so a shorter last
-     row can be centered by moving its first card in by half a card. */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(24, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: clamp(8px, 2vmin, 24px);
-    min-height: 0;
-  }
-  .grid > .card { grid-column: span 6; }
-  .grid > .card:nth-child(4n+1):nth-last-child(3) { grid-column: 4 / span 6; }
-  .grid > .card:nth-child(4n+1):nth-last-child(2) { grid-column: 7 / span 6; }
-  .grid > .card:nth-child(4n+1):nth-last-child(1) { grid-column: 10 / span 6; }
-
-  .card {
-    --accent: #888;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(4px, 1.2vmin, 14px);
-    min-height: 0;
-    padding: clamp(10px, 2.5vmin, 32px);
-    overflow: hidden;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: clamp(12px, 2vmin, 22px);
-    box-shadow: var(--shadow);
-    transition: transform .15s ease, border-color .15s ease;
-  }
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 4px;
-    background: var(--accent);
-  }
-  .card:hover, .card:focus-visible {
-    transform: translateY(-3px);
-    border-color: var(--accent);
-    outline: none;
-  }
-
-  .card img {
-    width: clamp(36px, 11vmin, 120px);
-    height: auto;
-    aspect-ratio: 1;
-    flex-shrink: 0;
-  }
-  .card h2 {
-    margin: 0;
-    font-size: clamp(14px, 2.6vmin, 26px);
-    letter-spacing: -0.01em;
-  }
-  .card p {
-    margin: 0;
-    max-width: 34ch;
-    color: var(--muted);
-    font-size: clamp(11px, 1.7vmin, 16px);
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
-  }
-  .tags span {
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--tag);
-    color: var(--muted);
-    font-size: clamp(10px, 1.4vmin, 13px);
-    white-space: nowrap;
-  }
-
-  /* Tall or narrow screens (phones): 2 columns, 4 rows; an odd last card
-     takes the whole row. */
-  @media (max-aspect-ratio: 1/1), (max-width: 700px) {
-    .grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-rows: repeat(4, minmax(0, 1fr));
-    }
-    .grid > .card,
-    .grid > .card:nth-child(4n+1):nth-last-child(n) { grid-column: auto; }
-    .grid > .card:nth-child(odd):last-child { grid-column: 1 / -1; }
-  }
-  /* Very low screens (phone on its side): drop the description and tags. */
-  @media (max-height: 480px) {
-    .card p, .tags { display: none; }
-    header p { display: none; }
-  }
-</style>
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = l === 'sr' ? 'sr-Latn' : 'en';
+  })();
+</script>
+<script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1 data-i18n="title">Moje aplikacije</h1>
-    <div class="side">
-      <p data-i18n="count">7 aplikacija · Flutter</p>
+  <nav class="nav">
+    <div class="wrap">
+      <a class="brand" href="#top">petar<span class="at">@</span>dev<span class="path">:~</span><span class="dollar">$</span></a>
+      <div class="links">
+        <a href="#projects"><span lang="sr-Latn">./projekti</span><span lang="en">./projects</span></a>
+        <a href="#case-studies">./case-studies</a>
+        <a href="#apps"><span lang="sr-Latn">./aplikacije</span><span lang="en">./apps</span></a>
+        <a href="#stack">./stack</a>
+        <a href="#contact"><span lang="sr-Latn">./kontakt</span><span lang="en">./contact</span></a>
+      </div>
       <div class="lang" role="group" aria-label="Jezik / Language">
-        <button type="button" data-lang="sr" aria-pressed="true">SR</button>
-        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="sr">SR</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div class="intro">
+        <p class="status"><span class="dot"></span><span lang="sr-Latn">otvoren za nove prilike</span><span lang="en">open to new opportunities</span></p>
+        <h1>Petar Ćoćić<span class="cursor" aria-hidden="true">_</span></h1>
+        <p class="role">React &amp; React Native developer</p>
+        <p class="lead" lang="sr-Latn">Pravim brze web i mobilne aplikacije. Fokus mi je na <strong>performansama</strong>, <strong>real-time sistemima</strong> i <strong>AI integracijama</strong>, sa iskustvom u fintech-u i e-commerce-u.</p>
+        <p class="lead" lang="en">I build fast web and mobile apps, with a focus on <strong>performance</strong>, <strong>real-time systems</strong> and <strong>AI integration</strong>. Proven track record in fintech and e-commerce.</p>
+        <div class="actions">
+          <a class="btn primary" href="#projects"><span lang="sr-Latn">Projekti</span><span lang="en">Projects</span> →</a>
+          <a class="btn" href="#contact"><span lang="sr-Latn">Kontakt</span><span lang="en">Get in touch</span></a>
+          <a class="btn ghost" href="https://www.linkedin.com/feed/update/urn:li:share:7298003697232416768" target="_blank" rel="noopener noreferrer">✦ <span lang="sr-Latn">Priznanje kompanije</span><span lang="en">Company recognition</span></a>
+        </div>
+      </div>
+
+      <div class="term" aria-label="Terminal">
+        <div class="term-bar"><i></i><i></i><i></i><span>zsh — petar@dev</span></div>
+        <div class="term-body" id="term">
+          <p><span class="prompt">$</span> <span class="cmd">whoami</span></p>
+          <p class="out">Petar Ćoćić · <b>React &amp; React Native</b> developer</p>
+          <p><span class="prompt">$</span> <span class="cmd">cat focus.txt</span></p>
+          <p class="out"><em>performance</em>  <em>real-time</em>  <em>ai-integration</em></p>
+          <p><span class="prompt">$</span> <span class="cmd">ls industries/</span></p>
+          <p class="out"><b>fintech/</b>  <b>ecommerce/</b>  <b>osint/</b></p>
+          <p><span class="prompt">$</span> <span class="cmd">ls ~/apps | wc -l</span></p>
+          <p class="out">7</p>
+          <p><span class="prompt">$</span> <span class="caret"></span></p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b>3+</b><span lang="sr-Latn">godine iskustva</span><span lang="en">years of experience</span></div>
+        <div class="stat"><b>5</b><span lang="sr-Latn">poslovnih projekata</span><span lang="en">client projects</span></div>
+        <div class="stat"><b>6</b><span lang="sr-Latn">rešenih problema</span><span lang="en">case studies</span></div>
+        <div class="stat"><b>7</b><span lang="sr-Latn">mojih aplikacija</span><span lang="en">apps of my own</span></div>
       </div>
     </div>
   </header>
 
-  <main class="grid">
-    <a class="card" style="--accent:#ec8a5d" href="https://nananeko1305.github.io/Account-Manager/">
-      <img src="icons/account-manager.png" alt="">
-      <h2>Account Manager</h2>
-      <p data-i18n="am">Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
-      <div class="tags"><span class="ver">v0.1.0</span><span>Firebase</span></div>
-    </a>
+  <main>
+    <section id="projects">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-tag">// 01 · <span lang="sr-Latn">projekti</span><span lang="en">projects</span></p>
+          <h2><span lang="sr-Latn">Poslovni projekti</span><span lang="en">Featured projects</span></h2>
+          <p lang="sr-Latn">Aplikacije na kojima sam radio, od fintech-a do e-commerce-a.</p>
+          <p lang="en">Apps I have worked on, from fintech to e-commerce.</p>
+        </div>
 
-    <a class="card" style="--accent:#ff2e97" href="https://nananeko1305.github.io/bend-planer/">
-      <img src="icons/bend-planer.png" alt="">
-      <h2>Bend Planer</h2>
-      <p data-i18n="bp">Tezge benda: dogovorena cena, bakšiš i mesečni izveštaj.</p>
-      <div class="tags"><span class="ver">v1.0.0</span><span>Firebase</span></div>
-    </a>
+        <div class="projects">
+          <div class="card">
+            <div class="card-bar"><span>~/work/shoploan</span><span class="badge"><span lang="sr-Latn">privatni repo</span><span lang="en">private repo</span></span></div>
+            <div class="card-body">
+              <h3>ShopLoan</h3>
+              <p class="kicker"><span lang="sr-Latn">Kupovina i kredit u realnom vremenu</span><span lang="en">Shopping &amp; real-time loan app</span></p>
+              <p lang="sr-Latn">Mobilna aplikacija u kojoj korisnik kupuje i odmah na mestu kupovine traži kredit. AI skeniranje dokumenata odmah proverava da li korisnik može da dobije kredit, pa je odobravanje mnogo brže.</p>
+              <p lang="en">Mobile app that lets users shop and apply for a real-time loan at the point of purchase. AI-powered document scanning checks loan eligibility instantly, cutting approval time significantly.</p>
+              <div class="tags"><span>React Native</span><span>Golang</span><span>Django</span><span>AI Document Scanning</span></div>
+            </div>
+          </div>
 
-    <a class="card" style="--accent:#4f7be0" href="https://nananeko1305.github.io/car-expenses/">
-      <img src="icons/car-expenses.png" alt="">
-      <h2>Car Expenses</h2>
-      <p data-i18n="ce">Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.</p>
-      <div class="tags"><span class="ver">v1.11.2</span><span>Firebase</span></div>
-    </a>
+          <a class="card" href="https://www.altitudeit.org/portfolio/grocery-shopping-app" target="_blank" rel="noopener noreferrer">
+            <div class="card-bar"><span>~/work/grocery-app</span><span class="go">↗</span></div>
+            <div class="card-body">
+              <h3>Grocery Shopping App</h3>
+              <p class="kicker"><span lang="sr-Latn">Kupovina namirnica</span><span lang="en">Grocery shopping</span></p>
+              <p lang="sr-Latn">Mobilna aplikacija sa skeniranjem bar-koda: podaci o proizvodu, nutritivne vrednosti i bezbedno plaćanje. Ima popuste i istoriju porudžbina.</p>
+              <p lang="en">Mobile app with barcode scanning for instant product information, nutritional values and secure checkout. Features discount integration and order history.</p>
+              <div class="tags"><span>React Native</span><span>Golang</span><span>Payment Integration</span></div>
+            </div>
+          </a>
 
-    <a class="card" style="--accent:#3bbfb5" href="https://nananeko1305.github.io/money-tracking/">
-      <img src="icons/money-tracking.png" alt="">
-      <h2>Money Tracking</h2>
-      <p data-i18n="mt">Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.</p>
-      <div class="tags"><span class="ver">v1.4.0</span><span>Firebase</span></div>
-    </a>
+          <a class="card" href="https://www.altitudeit.org/portfolio/chatseedo-app" target="_blank" rel="noopener noreferrer">
+            <div class="card-bar"><span>~/work/chatseedo</span><span class="go">↗</span></div>
+            <div class="card-body">
+              <h3>Chatseedo</h3>
+              <p class="kicker"><span lang="sr-Latn">Pronalaženje događaja</span><span lang="en">Event discovery platform</span></p>
+              <p lang="sr-Latn">Web aplikacija za događaje širom sveta, povezana sa Viator, Viagogo, TMDB i StubHub. Filteri po mestu, interesovanjima i datumu.</p>
+              <p lang="en">Web app for discovering events worldwide through Viator, Viagogo, TMDB and StubHub. Advanced filtering by location, interests and date.</p>
+              <div class="tags"><span>Next.js</span><span>Golang</span><span>API Integration</span></div>
+            </div>
+          </a>
 
-    <a class="card" style="--accent:#5c64c8" href="https://nananeko1305.github.io/reminders/">
-      <img src="icons/reminders.png" alt="">
-      <h2>Reminders</h2>
-      <p data-i18n="rem">Događaji koji zvone kao alarm, uz podsetnike pre vremena.</p>
-      <div class="tags"><span class="ver">v2.1.0</span><span data-i18n="device">Na telefonu</span></div>
-    </a>
+          <a class="card" href="https://www.altitudeit.org/portfolio/students-app" target="_blank" rel="noopener noreferrer">
+            <div class="card-bar"><span>~/work/students-app</span><span class="go">↗</span></div>
+            <div class="card-body">
+              <h3>Student Discount Platform</h3>
+              <p class="kicker"><span lang="sr-Latn">Popusti za studente</span><span lang="en">Student discounts</span></p>
+              <p lang="sr-Latn">Mobilna aplikacija za studente u Švajcarskoj: popusti po lokaciji preko QR koda. Mapa prodavnica i popusti koji zavise od škole.</p>
+              <p lang="en">Mobile app for Swiss students to access location-based discounts via QR codes. Interactive map of stores with school-specific eligibility.</p>
+              <div class="tags"><span>React Native</span><span>Map Integration</span><span>QR Codes</span></div>
+            </div>
+          </a>
 
-    <a class="card" style="--accent:#2e8b60" href="https://nananeko1305.github.io/shopping-list/">
-      <img src="icons/shopping-list.png" alt="">
-      <h2>Shopping List</h2>
-      <p data-i18n="sl">Liste za kupovinu i pakovanje, sa štikliranjem stavki.</p>
-      <div class="tags"><span class="ver">v1.2.0</span><span data-i18n="device">Na telefonu</span></div>
-    </a>
+          <a class="card" href="https://www.altitudeit.org/" target="_blank" rel="noopener noreferrer">
+            <div class="card-bar"><span>~/work/altitudeit.org</span><span class="go">↗</span></div>
+            <div class="card-body">
+              <h3>AltitudeIT Website</h3>
+              <p class="kicker"><span lang="sr-Latn">Sajt kompanije</span><span lang="en">Company website</span></p>
+              <p lang="sr-Latn">Sam sam ga napravio po Figma dizajnu, na početku karijere: usluge, portfolio i tim. Trenutno ga ubrzavam.</p>
+              <p lang="en">Built solo from Figma designs early in my career: services, portfolio and team. Performance improvements in progress.</p>
+              <div class="tags"><span>Next.js</span><span>Responsive Design</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
 
-    <a class="card" style="--accent:#116b5f" href="https://nananeko1305.github.io/warranty-manager/">
-      <img src="icons/warranty-manager.png" alt="">
-      <h2>Warranty Manager</h2>
-      <p data-i18n="wm">Garancije sa slikom računa i podsetnik pre nego što isteknu.</p>
-      <div class="tags"><span class="ver">v1.0.1</span><span>Firebase</span></div>
-    </a>
+    <section id="case-studies">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-tag">// 02 · case-studies</p>
+          <h2><span lang="sr-Latn">Kako rešavam probleme</span><span lang="en">How I solve problems</span></h2>
+          <p lang="sr-Latn">Šest stvarnih problema: šta nije radilo, šta sam uradio i šta se promenilo. Klikni na karticu za detalje.</p>
+          <p lang="en">Six real problems: what was wrong, what I did and what changed. Click a card for the details.</p>
+        </div>
+
+        <div class="cases">
+          <details class="case" style="--c: var(--cyan)">
+            <summary>
+              <span class="metric">3200 → 180 ms</span>
+              <span class="metric-label"><span lang="sr-Latn">renderovanje tabele</span><span lang="en">table render time</span></span>
+              <h3>Performance Optimization</h3>
+              <span class="sub"><span lang="sr-Latn">Uska grla u real-time dashboard-ima</span><span lang="en">Fixing render bottlenecks in real-time dashboards</span></span>
+              <span class="tags"><span>React</span><span>WebSocket</span><span>react-window</span></span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="case-body">
+              <div class="kv"><span class="key">problem:</span>
+                <p lang="sr-Latn">Dashboard sa velikim tabelama dobija WebSocket podatke na svakih 5 sekundi. Teške komponente su zamrzavale UI, svi redovi tabele su bili u DOM-u, a ugnježdeni objekti su kvarili useMemo zbog poređenja po referenci.</p>
+                <p lang="en">A dashboard with large tables received WebSocket updates every 5 seconds. Heavy components froze the UI, every table row was in the DOM, and nested objects broke useMemo because of reference comparison.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">rešenje:</span><span lang="en">solution:</span></span>
+                <p lang="sr-Latn">Virtualizacija sa react-window, pa se renderuju samo vidljivi redovi. Memoizacija popravljena dubokim poređenjem ugnježdenih objekata. Tok WebSocket podataka sređen tako da nema nepotrebnih rendera.</p>
+                <p lang="en">Virtualization with react-window, so only visible rows render. Memoization fixed with deep equality checks for nested objects. WebSocket data flow reworked to avoid unnecessary re-renders.</p></div>
+              <div class="kv impact"><span class="key"><span lang="sr-Latn">rezultat:</span><span lang="en">impact:</span></span>
+                <p lang="sr-Latn">Renderovanje tabele palo sa 3200 ms na 180 ms. Nema više zamrzavanja tokom live ažuriranja. Memorija manja za 60%. Glatko skrolovanje na 60 fps i sa 10.000+ redova.</p>
+                <p lang="en">Table rendering went from 3200 ms to 180 ms. No more freezing during live updates. Memory usage down 60%. Smooth 60 fps scrolling even with 10,000+ rows.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">ključno:</span><span lang="en">highlights:</span></span>
+                <ul lang="sr-Latn">
+                  <li>Virtualizacija: 20–30 redova u DOM-u umesto svih</li>
+                  <li>useMemo popravljen pravim funkcijama poređenja za ugnježdene podatke</li>
+                  <li>Debounce WebSocket ažuriranja, promene stanja u paketima</li>
+                  <li>Profilisanje i uklanjanje nepotrebnih rendera</li>
+                </ul>
+                <ul lang="en">
+                  <li>Virtualization: 20–30 rows in the DOM instead of all of them</li>
+                  <li>useMemo fixed with proper equality functions for nested data</li>
+                  <li>Debounced WebSocket updates to batch state changes</li>
+                  <li>Profiled and removed unnecessary component re-renders</li>
+                </ul></div>
+            </div>
+          </details>
+
+          <details class="case" style="--c: var(--green)">
+            <summary>
+              <span class="metric"><span lang="sr-Latn">2–3 dana → &lt;2 min</span><span lang="en">2–3 days → &lt;2 min</span></span>
+              <span class="metric-label"><span lang="sr-Latn">provera identiteta</span><span lang="en">identity verification time</span></span>
+              <h3>AI Document Verification</h3>
+              <span class="sub"><span lang="sr-Latn">Provera ličnih dokumenata uživo u fintech aplikaciji</span><span lang="en">Real-time ID verification in a fintech mobile app</span></span>
+              <span class="tags"><span>React Native</span><span>Copilot AI</span><span>Computer Vision</span></span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="case-body">
+              <div class="kv"><span class="key">problem:</span>
+                <p lang="sr-Latn">Fintech aplikaciji je trebala automatska provera identiteta: poređenje ličnih dokumenata (pasoš, vozačka, lična karta) sa podacima koje je korisnik uneo, da bi se sprečile prevare.</p>
+                <p lang="en">A fintech app needed automated identity verification: comparing government IDs (passport, driver's license, national ID) with the data the user entered, to prevent fraud.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">rešenje:</span><span lang="en">solution:</span></span>
+                <p lang="sr-Latn">Povezao sam Copilot AI za skeniranje dokumenata i OCR. Napravio sam ekran kamere koji uživo pokazuje kako da se namesti dokument, i poređenje skeniranih podataka sa profilom korisnika, sa ocenom pouzdanosti.</p>
+                <p lang="en">Integrated Copilot AI for document scanning and OCR. Built a camera screen with live guidance for document positioning, and comparison logic between scanned data and the user profile, with confidence scoring.</p></div>
+              <div class="kv impact"><span class="key"><span lang="sr-Latn">rezultat:</span><span lang="en">impact:</span></span>
+                <p lang="sr-Latn">Ručna provera skraćena sa 2–3 dana na manje od 2 minuta. KYC završava 45% više korisnika. Tačnost otkrivanja prevara 94%.</p>
+                <p lang="en">Manual verification cut from 2–3 days to under 2 minutes. KYC completion rate up 45%. Fraud detection accuracy at 94%.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">ključno:</span><span lang="en">highlights:</span></span>
+                <ul lang="sr-Latn">
+                  <li>Prepoznavanje dokumenta i uputstvo za položaj uživo</li>
+                  <li>Više vrsta dokumenata (pasoš, lična karta, vozačka)</li>
+                  <li>Unakrsna provera skeniranih i unetih podataka</li>
+                  <li>Bezbedno rukovanje osetljivim ličnim podacima</li>
+                </ul>
+                <ul lang="en">
+                  <li>Real-time document detection and positioning guidance</li>
+                  <li>Multiple document types (passport, ID, driver's license)</li>
+                  <li>Cross-field validation between scanned and entered data</li>
+                  <li>Secure handling of sensitive personal information</li>
+                </ul></div>
+            </div>
+          </details>
+
+          <details class="case" style="--c: var(--purple)">
+            <summary>
+              <span class="metric">−70%</span>
+              <span class="metric-label"><span lang="sr-Latn">vremena za izradu formi</span><span lang="en">form development time</span></span>
+              <h3>Dynamic Form Engine</h3>
+              <span class="sub"><span lang="sr-Latn">Forme koje se same grade iz šeme sa backenda</span><span lang="en">Schema-driven UI generation system</span></span>
+              <span class="tags"><span>React</span><span>TypeScript</span><span>Validation</span></span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="case-body">
+              <div class="kv"><span class="key">problem:</span>
+                <p lang="sr-Latn">Trebao je sistem formi koji lako raste: UI se pravi iz šeme sa backenda i radi i u admin panelu i u korisničkim aplikacijama, bez dupliranja koda.</p>
+                <p lang="en">We needed a scalable form system that builds the UI from a backend schema and works in both admin panels and user apps, without duplicated code.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">rešenje:</span><span lang="en">solution:</span></span>
+                <p lang="sr-Latn">Type-safe engine koji mapira šemu sa backenda u React komponente. Uslovni prikaz (npr. TOTP polje samo kad je uključen MFA), validacija na dva nivoa (frontend i backend) i lazy loading za forme sa 50+ polja.</p>
+                <p lang="en">A type-safe engine that maps backend schemas to React components. Conditional rendering (e.g. a TOTP field only when MFA is on), two validation layers (frontend and backend) and lazy loading for forms with 50+ fields.</p></div>
+              <div class="kv impact"><span class="key"><span lang="sr-Latn">rezultat:</span><span lang="en">impact:</span></span>
+                <p lang="sr-Latn">Jedan kod pokreće više aplikacija. Novi tip polja ne traži izmene postojećih formi. Izrada formi brža za 70%.</p>
+                <p lang="en">One codebase powers several applications. A new field type needs zero changes to existing forms. Form development time down 70%.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">ključno:</span><span lang="en">highlights:</span></span>
+                <ul lang="sr-Latn">
+                  <li>Svi tipovi polja: tekst, broj, padajuća lista, višestruki izbor, datum, fajl, uslovna polja</li>
+                  <li>TypeScript modeli generisani iz odgovora backenda</li>
+                  <li>Dinamička pravila validacije sa povratnom informacijom odmah</li>
+                  <li>Lazy loading za složene forme</li>
+                </ul>
+                <ul lang="en">
+                  <li>All input types: text, number, dropdown, multi-select, date, file upload, conditional fields</li>
+                  <li>TypeScript models generated from backend responses</li>
+                  <li>Dynamic validation rules with real-time feedback</li>
+                  <li>Lazy loading for complex forms</li>
+                </ul></div>
+            </div>
+          </details>
+
+          <details class="case" style="--c: var(--orange)">
+            <summary>
+              <span class="metric"><span lang="sr-Latn">4 s → 0,8 s</span><span lang="en">4 s → 0.8 s</span></span>
+              <span class="metric-label"><span lang="sr-Latn">učitavanje liste proizvoda</span><span lang="en">product list load time</span></span>
+              <h3>Ecommerce Performance</h3>
+              <span class="sub"><span lang="sr-Latn">Ubrzavanje velikih kataloga proizvoda</span><span lang="en">Optimizing product catalogs at scale</span></span>
+              <span class="tags"><span>React Native</span><span>Image Optimization</span><span>Caching</span></span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="case-body">
+              <div class="kv"><span class="key">problem:</span>
+                <p lang="sr-Latn">E-commerce aplikacija sa sporom listom proizvoda. Veliki katalozi (1000+ proizvoda) pravili su probleme sa memorijom i trzanje pri skrolovanju, a slike su se sporo učitavale na lošoj vezi.</p>
+                <p lang="en">An e-commerce app with a slow product list. Large catalogs (1000+ products) caused memory issues and sluggish scrolling, and images loaded slowly on poor connections.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">rešenje:</span><span lang="en">solution:</span></span>
+                <p lang="sr-Latn">FlatList virtualizacija sa optimizovanim renderovanjem. Postepeno učitavanje slika sa zamućenim placeholder-om. Keširanje podataka i slika. Brža pretraga i filtriranje.</p>
+                <p lang="en">FlatList virtualization with optimized rendering. Progressive image loading with blur placeholders. A caching strategy for product data and images. Faster search and filtering.</p></div>
+              <div class="kv impact"><span class="key"><span lang="sr-Latn">rezultat:</span><span lang="en">impact:</span></span>
+                <p lang="sr-Latn">Lista proizvoda se učitava za 0,8 s umesto 4 s. Memorija aplikacije prepolovljena. Glatko skrolovanje i na lošoj mreži. Konverzija veća za 23%.</p>
+                <p lang="en">Product list load time down from 4 s to 0.8 s. App memory usage cut in half. Smooth scrolling even on poor networks. Conversion rate up 23%.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">ključno:</span><span lang="en">highlights:</span></span>
+                <ul lang="sr-Latn">
+                  <li>FlatList optimizacija: pravilan keyExtractor i memo</li>
+                  <li>Postepeno učitavanje slika (blur-up)</li>
+                  <li>Keširanje u memoriji i na disku</li>
+                  <li>Pretraga sa debounce-om i keširanim rezultatima</li>
+                </ul>
+                <ul lang="en">
+                  <li>FlatList optimization with a proper keyExtractor and memo</li>
+                  <li>Progressive image loading (blur-up)</li>
+                  <li>Memory and disk caching</li>
+                  <li>Debounced search with cached results</li>
+                </ul></div>
+            </div>
+          </details>
+
+          <details class="case" style="--c: var(--pink)">
+            <summary>
+              <span class="metric">−80%</span>
+              <span class="metric-label"><span lang="sr-Latn">nepotrebnih rendera</span><span lang="en">unnecessary re-renders</span></span>
+              <h3>WebSocket Real-time Integration</h3>
+              <span class="sub"><span lang="sr-Latn">Sinhronizacija podataka uživo</span><span lang="en">Live data synchronization architecture</span></span>
+              <span class="tags"><span>React</span><span>WebSocket</span><span>State Management</span></span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="case-body">
+              <div class="kv"><span class="key">problem:</span>
+                <p lang="sr-Latn">Aplikacija dobija podatke sa servera na svakih 5 sekundi. Prva verzija je imala probleme sa performansama i haos u stanju aplikacije.</p>
+                <p lang="en">The app received server data every 5 seconds. The first version had performance issues and chaotic state management.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">rešenje:</span><span lang="en">solution:</span></span>
+                <p lang="sr-Latn">Menadžer WebSocket konekcije koji se sam ponovo povezuje. Ažuriranja stanja idu u paketima. Komponente se pretplaćuju samo na podatke koji im trebaju.</p>
+                <p lang="en">A WebSocket connection manager with reconnection logic. Batched state updates. A subscription system so components only receive the data they need.</p></div>
+              <div class="kv impact"><span class="key"><span lang="sr-Latn">rezultat:</span><span lang="en">impact:</span></span>
+                <p lang="sr-Latn">Nema više prekinutih konekcija. Nepotrebnih rendera manje za 80%. Podaci su sveži, a aplikacija i dalje brza.</p>
+                <p lang="en">No more dropped connections. Unnecessary re-renders down 80%. Fresher data without losing performance.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">ključno:</span><span lang="en">highlights:</span></span>
+                <ul lang="sr-Latn">
+                  <li>Automatsko ponovno povezivanje sa exponential backoff-om</li>
+                  <li>Ažuriranja stanja u paketima, manje rendera</li>
+                  <li>Pretplate za selektivna ažuriranja</li>
+                  <li>Heartbeat za praćenje zdravlja konekcije</li>
+                </ul>
+                <ul lang="en">
+                  <li>Automatic reconnection with exponential backoff</li>
+                  <li>Batched state updates to minimize renders</li>
+                  <li>Subscription-based selective updates</li>
+                  <li>Heartbeat for connection health monitoring</li>
+                </ul></div>
+            </div>
+          </details>
+
+          <details class="case" style="--c: var(--yellow)">
+            <summary>
+              <span class="metric">98%</span>
+              <span class="metric-label"><span lang="sr-Latn">uspešnih plaćanja</span><span lang="en">payment success rate</span></span>
+              <h3>Fintech Mobile Security</h3>
+              <span class="sub"><span lang="sr-Latn">Bezbedna plaćanja u mobilnoj aplikaciji</span><span lang="en">Payment flows and security patterns</span></span>
+              <span class="tags"><span>React Native</span><span>Biometrics</span><span>Encryption</span></span>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="case-body">
+              <div class="kv"><span class="key">problem:</span>
+                <p lang="sr-Latn">Bezbedna plaćanja u fintech mobilnoj aplikaciji: biometrijska prijava, šifrovano skladište i usklađenost sa finansijskim propisima.</p>
+                <p lang="en">Secure payment flows in a fintech mobile app: biometric authentication, encrypted storage and compliance with financial regulations.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">rešenje:</span><span lang="en">solution:</span></span>
+                <p lang="sr-Latn">Face ID / Touch ID za osetljive radnje. Plaćanje sa proverom u više koraka. Šifrovano skladište za osetljive podatke. Provere za otkrivanje prevara.</p>
+                <p lang="en">Face ID / Touch ID for sensitive operations. A multi-step verified payment flow. Encrypted storage for sensitive data. Fraud detection checks.</p></div>
+              <div class="kv impact"><span class="key"><span lang="sr-Latn">rezultat:</span><span lang="en">impact:</span></span>
+                <p lang="sr-Latn">Nula bezbednosnih incidenata od puštanja. 98% uspešnih plaćanja. Prošla bezbednosne revizije 3 velike finansijske institucije.</p>
+                <p lang="en">Zero security incidents since launch. 98% payment success rate. Passed security audits from 3 major financial institutions.</p></div>
+              <div class="kv"><span class="key"><span lang="sr-Latn">ključno:</span><span lang="en">highlights:</span></span>
+                <ul lang="sr-Latn">
+                  <li>Biometrijska potvrda transakcija</li>
+                  <li>End-to-end šifrovanje podataka o plaćanju</li>
+                  <li>Višefaktorska autentifikacija</li>
+                  <li>Usklađenost sa PCI DSS standardom</li>
+                </ul>
+                <ul lang="en">
+                  <li>Biometric authentication for transactions</li>
+                  <li>End-to-end encryption for payment data</li>
+                  <li>Multi-factor authentication flows</li>
+                  <li>PCI DSS compliance</li>
+                </ul></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="apps">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-tag">// 03 · <span lang="sr-Latn">aplikacije</span><span lang="en">side-projects</span></p>
+          <h2><span lang="sr-Latn">Moje aplikacije</span><span lang="en">Apps of my own</span></h2>
+          <p lang="sr-Latn">Sedam Flutter aplikacija koje sam napravio u slobodno vreme. Svaka izlazi preko automatskog release-a na GitHub Actions i ima svoju stranicu za preuzimanje.</p>
+          <p lang="en">Seven Flutter apps I built in my spare time. Each one ships through an automated GitHub Actions release and has its own download page.</p>
+        </div>
+
+        <div class="apps">
+          <a class="app" style="--accent:#ec8a5d" href="https://nananeko1305.github.io/Account-Manager/">
+            <div class="app-head"><img src="icons/account-manager.png" alt="" width="52" height="52"><span class="ver">v0.1.0</span></div>
+            <h3>Account Manager</h3>
+            <p lang="sr-Latn">Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.</p>
+            <p lang="en">Accounts and passwords, encrypted on the phone with a master password.</p>
+            <span class="tag">Flutter · Firebase</span>
+          </a>
+          <a class="app" style="--accent:#ff2e97" href="https://nananeko1305.github.io/bend-planer/">
+            <div class="app-head"><img src="icons/bend-planer.png" alt="" width="52" height="52"><span class="ver">v1.3.2</span></div>
+            <h3>Bend Planer</h3>
+            <p lang="sr-Latn">Tezge benda: dogovorena cena, bakšiš i mesečni izveštaj.</p>
+            <p lang="en">The band's gigs: agreed price, tips and a monthly report.</p>
+            <span class="tag">Flutter · Firebase</span>
+          </a>
+          <a class="app" style="--accent:#4f7be0" href="https://nananeko1305.github.io/car-expenses/">
+            <div class="app-head"><img src="icons/car-expenses.png" alt="" width="52" height="52"><span class="ver">v1.11.2</span></div>
+            <h3>Car Expenses</h3>
+            <p lang="sr-Latn">Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.</p>
+            <p lang="en">Service and repair costs for every car: date, amount and mileage.</p>
+            <span class="tag">Flutter · Firebase</span>
+          </a>
+          <a class="app" style="--accent:#3bbfb5" href="https://nananeko1305.github.io/money-tracking/">
+            <div class="app-head"><img src="icons/money-tracking.png" alt="" width="52" height="52"><span class="ver">v1.5.0</span></div>
+            <h3>Money Tracking</h3>
+            <p lang="sr-Latn">Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.</p>
+            <p lang="en">Monthly budget: categories, salary, fixed costs and savings.</p>
+            <span class="tag">Flutter · Firebase</span>
+          </a>
+          <a class="app" style="--accent:#5c64c8" href="https://nananeko1305.github.io/reminders/">
+            <div class="app-head"><img src="icons/reminders.png" alt="" width="52" height="52"><span class="ver">v2.1.0</span></div>
+            <h3>Reminders</h3>
+            <p lang="sr-Latn">Događaji koji zvone kao alarm, uz podsetnike pre vremena.</p>
+            <p lang="en">Events that ring like an alarm, with reminders ahead of time.</p>
+            <span class="tag">Flutter · <span lang="sr-Latn">na telefonu</span><span lang="en">on device</span></span>
+          </a>
+          <a class="app" style="--accent:#2e8b60" href="https://nananeko1305.github.io/shopping-list/">
+            <div class="app-head"><img src="icons/shopping-list.png" alt="" width="52" height="52"><span class="ver">v1.2.0</span></div>
+            <h3>Shopping List</h3>
+            <p lang="sr-Latn">Liste za kupovinu i pakovanje, sa štikliranjem stavki.</p>
+            <p lang="en">Shopping and packing lists with items to tick off.</p>
+            <span class="tag">Flutter · <span lang="sr-Latn">na telefonu</span><span lang="en">on device</span></span>
+          </a>
+          <a class="app" style="--accent:#116b5f" href="https://nananeko1305.github.io/warranty-manager/">
+            <div class="app-head"><img src="icons/warranty-manager.png" alt="" width="52" height="52"><span class="ver">v1.0.1</span></div>
+            <h3>Warranty Manager</h3>
+            <p lang="sr-Latn">Garancije sa slikom računa i podsetnik pre nego što isteknu.</p>
+            <p lang="en">Warranties with a photo of the receipt, and a reminder before they end.</p>
+            <span class="tag">Flutter · Firebase</span>
+          </a>
+          <a class="app more" href="https://github.com/nananeko1305" target="_blank" rel="noopener noreferrer">
+            <span class="plus" aria-hidden="true">+</span>
+            <h3><span lang="sr-Latn">Više na GitHub-u</span><span lang="en">More on GitHub</span></h3>
+            <span class="tag">@nananeko1305</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-tag">// 04 · stack</p>
+          <h2><span lang="sr-Latn">Tehnologije</span><span lang="en">Technical skills</span></h2>
+        </div>
+
+        <div class="code">
+          <div class="term-bar"><i></i><i></i><i></i><span>stack.ts</span></div>
+          <div class="code-body">
+            <div class="row"><code><span class="kw">const</span> <span class="id">stack</span> <span class="pun">= {</span></code></div>
+            <div class="row in"><code><span class="prop">frontend</span><span class="pun">: [</span><span class="str">"React"</span>, <span class="str">"TypeScript"</span>, <span class="str">"JavaScript"</span>, <span class="str">"Next.js"</span>, <span class="str">"Tailwind CSS"</span><span class="pun">],</span></code></div>
+            <div class="row in"><code><span class="prop">mobile</span><span class="pun">: [</span><span class="str">"React Native"</span>, <span class="str">"Flutter"</span>, <span class="str">"Mobile Development"</span><span class="pun">],</span></code></div>
+            <div class="row in"><code><span class="prop">realtime</span><span class="pun">: [</span><span class="str">"WebSocket"</span>, <span class="str">"State Management"</span>, <span class="str">"Real-time Systems"</span><span class="pun">],</span></code></div>
+            <div class="row in"><code><span class="prop">strengths</span><span class="pun">: [</span><span class="str">"Performance Optimization"</span>, <span class="str">"AI Integration"</span>, <span class="str">"Form Systems"</span>, <span class="str">"Security Patterns"</span><span class="pun">],</span></code></div>
+            <div class="row in"><code><span class="prop">tooling</span><span class="pun">: [</span><span class="str">"Firebase"</span>, <span class="str">"GitHub Actions"</span><span class="pun">],</span></code></div>
+            <div class="row"><code><span class="pun">};</span></code></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-tag">// 05 · <span lang="sr-Latn">kontakt</span><span lang="en">contact</span></p>
+          <h2><span lang="sr-Latn">Hajde da se povežemo</span><span lang="en">Let's connect</span></h2>
+          <p lang="sr-Latn">Otvoren sam za nove prilike. Najbrže me nađeš na LinkedIn-u ili mejlom.</p>
+          <p lang="en">Open to new opportunities. LinkedIn or email is the fastest way to reach me.</p>
+        </div>
+
+        <div class="contacts">
+          <a class="contact" href="https://github.com/nananeko1305" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            <div><b>GitHub</b><span>nananeko1305</span></div>
+          </a>
+          <a class="contact" href="https://www.linkedin.com/in/petar-cocic/" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            <div><b>LinkedIn</b><span>in/petar-cocic</span></div>
+          </a>
+          <a class="contact" href="mailto:petarcocic1305@gmail.com">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <div><b>Email</b><span>petarcocic1305@gmail.com</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script>
-    // Serbian and English. The HTML holds the Serbian text, so the page reads
-    // fine without JavaScript. The language is ?lang=sr|en if given, then the
-    // visitor's last choice, then the browser's language.
-    const TEXT = {
-      sr: {
-        title: 'Moje aplikacije',
-        count: '7 aplikacija · Flutter',
-        am: 'Nalozi i lozinke, šifrovani na telefonu glavnom lozinkom.',
-        bp: 'Tezge benda: dogovorena cena, bakšiš i mesečni izveštaj.',
-        ce: 'Troškovi servisa i popravki za svaki auto: datum, iznos i kilometraža.',
-        mt: 'Mesečni budžet: kategorije, plata, fiksni troškovi i štednja.',
-        rem: 'Događaji koji zvone kao alarm, uz podsetnike pre vremena.',
-        sl: 'Liste za kupovinu i pakovanje, sa štikliranjem stavki.',
-        wm: 'Garancije sa slikom računa i podsetnik pre nego što isteknu.',
-        device: 'Na telefonu',
-      },
-      en: {
-        title: 'My apps',
-        count: '7 apps · Flutter',
-        am: 'Accounts and passwords, encrypted on the phone with a master password.',
-        bp: "The band's gigs: agreed price, tips and a monthly report.",
-        ce: 'Service and repair costs for every car: date, amount and mileage.',
-        mt: 'Monthly budget: categories, salary, fixed costs and savings.',
-        rem: 'Events that ring like an alarm, with reminders ahead of time.',
-        sl: 'Shopping and packing lists with items to tick off.',
-        wm: 'Warranties with a photo of the receipt, and a reminder before they end.',
-        device: 'On device',
-      },
-    };
-
-    function pickLang() {
-      const asked = new URLSearchParams(location.search).get('lang');
-      if (Object.hasOwn(TEXT, asked)) return asked;
-      try {
-        const saved = localStorage.getItem('lang');
-        if (Object.hasOwn(TEXT, saved)) return saved;
-      } catch (_) {}
-      const browser = (navigator.languages && navigator.languages[0]) || navigator.language || '';
-      return /^(sr|hr|bs|sh|cnr)\b/i.test(browser) ? 'sr' : 'en';
-    }
-
-    function setLang(lang) {
-      const t = TEXT[lang];
-      document.documentElement.lang = lang === 'sr' ? 'sr-Latn' : 'en';
-      document.title = t.title;
-      for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t[el.dataset.i18n];
-      for (const b of document.querySelectorAll('[data-lang]')) {
-        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
-      }
-    }
-
-    for (const b of document.querySelectorAll('[data-lang]')) {
-      b.addEventListener('click', () => {
-        setLang(b.dataset.lang);
-        try { localStorage.setItem('lang', b.dataset.lang); } catch (_) {}
-      });
-    }
-    setLang(pickLang());
-
-    // Each app's download page shows its newest version, so read it from
-    // there and the cards never go stale. The numbers above are the fallback
-    // (opened from disk, or a page that does not answer).
-    for (const card of document.querySelectorAll('.card[href^="https://nananeko1305.github.io/"]')) {
-      fetch(card.href, { cache: 'no-cache' })
-        .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
-        .then((html) => {
-          const m = html.match(/class="chip">v([0-9.]+)</);
-          if (m) card.querySelector('.ver').textContent = 'v' + m[1];
-        })
-        .catch(() => {});
-    }
-  </script>
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Petar Ćoćić</span>
+      <code>&lt;built with HTML · CSS · JS /&gt;</code>
+    </div>
+  </footer>
 </body>
 </html>
