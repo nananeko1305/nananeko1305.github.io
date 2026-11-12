@@ -271,8 +271,11 @@ h1 {
   gap: 12px;
   margin-top: 16px;
 }
+/* Phones: two a row, an odd last one takes the whole row. */
+.stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
 @media (min-width: 720px) {
-  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stat:last-child:nth-child(odd) { grid-column: auto; }
 }
 .stat {
   padding: 16px 18px;
@@ -286,7 +289,6 @@ h1 {
   font: 700 clamp(28px, 4vw, 36px)/1.15 var(--mono);
 }
 .stat span { color: var(--muted); font-size: 14px; }
-.stat b span { color: inherit; font-size: inherit; }
 
 /* ---------- Sections ---------- */
 section {
