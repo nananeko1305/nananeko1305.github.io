@@ -286,6 +286,7 @@ h1 {
   font: 700 clamp(28px, 4vw, 36px)/1.15 var(--mono);
 }
 .stat span { color: var(--muted); font-size: 14px; }
+.stat b span { color: inherit; font-size: inherit; }
 
 /* ---------- Sections ---------- */
 section {
