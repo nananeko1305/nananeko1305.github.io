@@ -503,28 +503,6 @@ a.card:hover {
 .app .tag { margin-top: auto; color: var(--dim); font: 12px var(--mono); }
 .app .tag span { white-space: nowrap; }
 
-.app.more {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-style: dashed;
-  border-color: var(--line-2);
-  background: transparent;
-  --accent: var(--green);
-}
-.app.more::before { display: none; }
-.app.more .tag { margin-top: 0; overflow-wrap: anywhere; }
-.plus {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px dashed var(--line-2);
-  border-radius: 12px;
-  color: var(--green);
-  font: 400 24px var(--mono);
-}
-
 /* ---------- Stack (code window) ---------- */
 .code-body { padding: 16px 20px 18px 0; counter-reset: ln; }
 .row {
@@ -599,4 +577,31 @@ footer code { font: 12px var(--mono); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* GitHub, as a command under the apps */
+.gh-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 16px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font: 14px var(--mono);
+  text-decoration: none;
+  transition: border-color .2s, transform .2s;
+}
+.gh-line svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.gh-line b { font-weight: 600; }
+.gh-note { color: var(--muted); }
+.gh-note::before { content: "# "; }
+.gh-arrow { margin-left: auto; color: var(--green); transition: transform .2s; }
+.gh-line:hover { border-color: var(--green); }
+.gh-line:hover .gh-arrow { transform: translateX(4px); }
+@media (max-width: 640px) {
+  .gh-line { flex-wrap: wrap; row-gap: 4px; font-size: 13px; }
+  .gh-note { order: 3; flex-basis: 100%; padding-left: 32px; }
 }
